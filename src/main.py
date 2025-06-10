@@ -1,12 +1,14 @@
 import pygame
 import sys
 import random
+import pygame.font
 pygame.init()
 width,height= 600,400
 cell_size=20
 black=(0,0,0)
 green=(0,255,0)
 red=(255,0,0)
+white=(255,255,255)
 food_x=random.randrange(0,width,cell_size)
 food_y=random.randrange(0,height,cell_size)
 food=(food_x,food_y)
@@ -15,6 +17,14 @@ pygame.display.set_caption("Snake Game")
 snake=[(100,100),(80,100),(60,100)]
 direction="RIGHT"
 clock=pygame.time.Clock()
+font=pygame.font.SysFont(None,48)
+def game_over():
+    text=font.render("GAME OVER", True, white)
+    screen.blit(text,(width//2-100,height//2-25))
+    pygame.display.flip()
+    pygame.time.delay(2000)
+    pygame.quit()
+    sys.exit()
 while True:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
@@ -38,6 +48,11 @@ while True:
         new_head=(head_x-cell_size,head_y)
     elif direction=="RIGHT":
         new_head=(head_x+cell_size,head_y)
+    if (new_head[0]<0 or new_head[0]>=width or
+        new_head[1]<0 or new_head[1]>=height):
+        game_over()
+    if new_head in snake:
+        game_over()
     if new_head==food:
         snake.insert(0,new_head)
         food=(random.randrange(0,width,cell_size),
