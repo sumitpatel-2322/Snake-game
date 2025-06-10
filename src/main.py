@@ -1,10 +1,15 @@
 import pygame
 import sys
+import random
 pygame.init()
 width,height= 600,400
 cell_size=20
 black=(0,0,0)
 green=(0,255,0)
+red=(255,0,0)
+food_x=random.randrange(0,width,cell_size)
+food_y=random.randrange(0,height,cell_size)
+food=(food_x,food_y)
 screen=pygame.display.set_mode((width,height))
 pygame.display.set_caption("Snake Game")
 snake=[(100,100),(80,100),(60,100)]
@@ -33,9 +38,15 @@ while True:
         new_head=(head_x-cell_size,head_y)
     elif direction=="RIGHT":
         new_head=(head_x+cell_size,head_y)
-    snake=[new_head]+snake[:-1]
+    if new_head==food:
+        snake.insert(0,new_head)
+        food=(random.randrange(0,width,cell_size),
+              random.randrange(0,height,cell_size))
+    else:
+        snake=[new_head]+snake[:-1]
     screen.fill(black)
+    pygame.draw.rect(screen,red,(*food,cell_size,cell_size))
     for block in snake:
         pygame.draw.rect(screen,green,(*block,cell_size,cell_size))
     pygame.display.flip()
-    clock.tick(20)
+    clock.tick(10)
