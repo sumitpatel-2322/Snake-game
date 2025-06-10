@@ -18,6 +18,11 @@ snake=[(100,100),(80,100),(60,100)]
 direction="RIGHT"
 clock=pygame.time.Clock()
 font=pygame.font.SysFont(None,48)
+score=0
+speed=10
+def display_score(score):
+    score_text=font.render(f"Score: {score}",True,white)
+    screen.blit(score_text,(10,10))
 def game_over():
     text=font.render("GAME OVER", True, white)
     screen.blit(text,(width//2-100,height//2-25))
@@ -55,6 +60,8 @@ while True:
         game_over()
     if new_head==food:
         snake.insert(0,new_head)
+        score+=1
+        speed=min(speed+1,30)
         food=(random.randrange(0,width,cell_size),
               random.randrange(0,height,cell_size))
     else:
@@ -63,5 +70,6 @@ while True:
     pygame.draw.rect(screen,red,(*food,cell_size,cell_size))
     for block in snake:
         pygame.draw.rect(screen,green,(*block,cell_size,cell_size))
+    display_score(score)
     pygame.display.flip()
-    clock.tick(10)
+    clock.tick(speed)
